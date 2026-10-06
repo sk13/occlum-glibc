@@ -50,6 +50,10 @@ void _dl_parse_auxv (ElfW(auxv_t) *av, dl_parse_auxv_t auxv_values)
   GLRO(dl_clktck) = auxv_values[AT_CLKTCK];
   GLRO(dl_fpu_control) = auxv_values[AT_FPUCW];
   _dl_random = (void *) auxv_values[AT_RANDOM];
+  /* Occlum note: Init the __occlum_entry from the aux vector,
+     Occlum has set the value of aux vector entry to the address
+     of Occlum's syscall handler. */
+  __occlum_entry = (void *) auxv_values[AT_OCCLUM_ENTRY];
   GLRO(dl_minsigstacksize) = auxv_values[AT_MINSIGSTKSZ];
   GLRO(dl_sysinfo_dso) = (void *) auxv_values[AT_SYSINFO_EHDR];
 #ifdef NEED_DL_SYSINFO
