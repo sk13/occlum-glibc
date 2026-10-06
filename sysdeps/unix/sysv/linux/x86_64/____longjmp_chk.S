@@ -40,7 +40,7 @@ longjmp_msg:
 	xorl	%edi, %edi;						\
 	lea	-sizeSS(%rsp), %RSI_LP;					\
 	movl	$__NR_sigaltstack, %eax;				\
-	syscall;							\
+	OCCLUM_SYSCALL;							\
 	/* Without working sigaltstack we cannot perform the test.  */	\
 	testl	%eax, %eax;						\
 	jne	.Lok2;							\

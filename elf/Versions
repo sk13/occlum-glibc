@@ -80,4 +80,8 @@ ld {
     __tunable_is_initialized;
     __tunable_get_val;
   }
+  OCCLUM {
+    # Occlum syscall address
+    __occlum_entry;
+  }
 }
