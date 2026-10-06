@@ -228,6 +228,9 @@ weak_alias (__get_nprocs, get_nprocs)
 int
 __get_nprocs_conf (void)
 {
+  /* Occlum Note: Do not support sysfs, call __get_nprocs instead */
+  return __get_nprocs ();
+
   int result = read_sysfs_file ("/sys/devices/system/cpu/possible");
   if (result != 0)
     return result;
