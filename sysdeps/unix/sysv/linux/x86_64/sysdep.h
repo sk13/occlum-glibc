@@ -224,8 +224,29 @@
 
 #else	/* !__ASSEMBLER__ */
 
-/* Registers clobbered by syscall.  */
-# define REGISTERS_CLOBBERED_BY_SYSCALL "cc", "r11", "cx"
+/* Registers clobbered by syscall.
+
+   Occlum note: A system call through the entry of Occlum (OCCLUM_SYSCALL)
+   does not preserve the vector registers, as Linux does.  The LibOS uses
+   them (SSE, and AVX-512 in the protected file system), but saves only the
+   general purpose registers of the user.  So the compiler must not keep a
+   value in a vector register across the asm of a system call.  The
+   registers xmm16-xmm31 and k1-k7 can only be named, and only be allocated
+   by the compiler, if the file is compiled for AVX-512.  A clobber of an
+   xmm register covers the whole ymm/zmm register.  */
+# define REGISTERS_CLOBBERED_BY_SYSCALL_VECTOR \
+  "xmm0", "xmm1", "xmm2", "xmm3", "xmm4", "xmm5", "xmm6", "xmm7", \
+  "xmm8", "xmm9", "xmm10", "xmm11", "xmm12", "xmm13", "xmm14", "xmm15"
+# ifdef __AVX512F__
+#  define REGISTERS_CLOBBERED_BY_SYSCALL "cc", "r11", "cx", \
+  REGISTERS_CLOBBERED_BY_SYSCALL_VECTOR, \
+  "xmm16", "xmm17", "xmm18", "xmm19", "xmm20", "xmm21", "xmm22", "xmm23", \
+  "xmm24", "xmm25", "xmm26", "xmm27", "xmm28", "xmm29", "xmm30", "xmm31", \
+  "k1", "k2", "k3", "k4", "k5", "k6", "k7"
+# else
+#  define REGISTERS_CLOBBERED_BY_SYSCALL "cc", "r11", "cx", \
+  REGISTERS_CLOBBERED_BY_SYSCALL_VECTOR
+# endif
 
 /* NB: This also works when X is an array.  For an array X,  type of
    (X) - (X) is ptrdiff_t, which is signed, since size of ptrdiff_t

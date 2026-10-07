@@ -154,7 +154,7 @@ _Static_assert (offsetof (tcbhead_t, __glibc_unused2) == 0x80,
 		   : "0" ((unsigned long int) __NR_arch_prctl),		      \
 		     "D" ((unsigned long int) ARCH_SET_FS),		      \
 		     "S" (_thrdescr)					      \
-		   : "memory", "cc", "r11", "cx");			      \
+		   : "memory", REGISTERS_CLOBBERED_BY_SYSCALL);		      \
 									      \
     _result == 0;							      \
   })
